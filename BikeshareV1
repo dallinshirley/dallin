@@ -1,0 +1,186 @@
+import time
+import statistics
+import pandas as pd
+import numpy as np
+
+CITY_DATA = { 'chicago': 'chicago.csv',
+              'new york city': 'new_york_city.csv',
+              'washington': 'washington.csv' }
+
+MONTH_DATA = { 'all': "",'january': 1,'february': 2,'march': 3,'april': 4,'may': 5,'june': 6,'july': 7,'august': 8,'september': 9,'october': 10,'november': 11,'december': 12}
+DAY_DATA = { 'all': "",'monday': 0,'tuesday': 1,'wednesday': 2,'thursday': 3,'friday': 4,'saturday': 5,'sunday': 6}
+HOUR_DATA = { 'all': "",1:'1:00 AM',2:'2:00 AM',3:'3:00 AM',4:'4:00 AM',5:'5:00 AM',6:'6:00 AM',7:'7:00 AM',8:'8:00 AM',9:'9:00 AM',10:'10:00 AM',11:'11:00 AM',12:'12:00 PM',13:'1:00 PM',14:'2:00 PM',15:'3:00 PM',16:'4:00 PM',17:'5:00 PM',18:'6:00 PM',19:'7:00 PM',20:'8:00 PM',21:'9:00 PM',22:'10:00 PM',23:'11:00 PM',24:'12:00 AM'}
+
+city_list = list(CITY_DATA.keys())
+month_list = list(MONTH_DATA.keys())
+day_list = list(DAY_DATA.keys())
+
+def get_filters():
+    """
+    Asks user to specify a city, month, and day to analyze.
+
+    Returns:
+        (str) city - name of the city to analyze
+        (str) month - name of the month to filter by, or "all" to apply no month filter
+        (str) day - name of the day of week to filter by, or "all" to apply no day filter
+    """
+    print('Hello! Let\'s explore some US bikeshare data!')
+    
+    # get user input for city (chicago, new york city, washington)
+    
+    city = input('What city would you like to look at? ').lower()
+    while city not in city_list:
+                city = input("Please enter a valid city: ").lower()
+
+    # get user input for month (all, january, february, ... , june)
+   
+    month = input('What month would you like to look at? ').lower()
+    while month not in month_list:
+                month = input("Please enter a valid month: ").lower()
+
+    # get user input for day of week (all, monday, tuesday, ... sunday)
+
+    day = input('What day would you like to look at? ').lower()
+    while day not in day_list:
+                day = input("Please enter a valid day: ").lower()
+            
+    return city, month, day
+        
+def load_data(city, month, day):
+    
+    """
+    Loads data for the specified city and filters by month and day if applicable.
+
+    Args:
+        (str) city - name of the city to analyze
+        (str) month - name of the month to filter by, or "all" to apply no month filter
+        (str) day - name of the day of week to filter by, or "all" to apply no day filter
+    Returns:
+        df - Pandas DataFrame containing city data filtered by month and day
+    """    
+
+    if month == 'all' and day != 'all':
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        is_day =  df['Day_of_Week_ID']==DAY_DATA.get(day, "")
+        df = df[is_day]
+        print("You loaded the file: " + str(filename))
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40)
+    elif day == 'all' and month != 'all':
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        is_month =  df['Month_ID']==MONTH_DATA.get(month, "")
+        df = df[is_month]
+        print("You loaded the file: " + str(filename))
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40)
+    elif month == 'all' and day == 'all':
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        print("You loaded the file: " + str(filename))
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40)
+    else:
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        is_month =  df['Month_ID']==MONTH_DATA.get(month, "")
+        month_filter = df[is_month]
+        is_month_and_day =  month_filter['Day_of_Week_ID']==DAY_DATA.get(day, "")
+        df = month_filter[is_month_and_day]
+        print("You loaded the file: " + str(filename))
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40) 
+        
+    return df
+        
+def time_stats(df):
+    
+    get_filters()
+    
+    return city, month, day
+         
+    if month == 'all' and day != 'all':
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        is_day =  df['Day_of_Week_ID']==DAY_DATA.get(day, "")
+        df = df[is_day]
+        print("You loaded the file: " + str(filename))
+        print('The most common month is ' + list(MONTH_DATA.keys())[list(MONTH_DATA.values()).index((statistics.mode(df['Month_ID'])))].title())
+        print('The most common day of the week is ' + list(DAY_DATA.keys())[list(DAY_DATA.values()).index((statistics.mode(df['Day_of_Week_ID'])))].title())
+        print('The most common hour of the day is ' + list(HOUR_DATA.values())[list(HOUR_DATA.keys()).index((statistics.mode(df['Hour_of_Day_ID'])))].upper())
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40)
+    elif day == 'all' and month != 'all':
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        is_month =  df['Month_ID']==MONTH_DATA.get(month, "")
+        df = df[is_month]
+        print("You loaded the file: " + str(filename))
+        print('The most common month is ' + list(MONTH_DATA.keys())[list(MONTH_DATA.values()).index((statistics.mode(df['Month_ID'])))].title())
+        print('The most common day of the week is ' + list(DAY_DATA.keys())[list(DAY_DATA.values()).index((statistics.mode(df['Day_of_Week_ID'])))].title())
+        print('The most common hour of the day is ' + list(HOUR_DATA.values())[list(HOUR_DATA.keys()).index((statistics.mode(df['Hour_of_Day_ID'])))].upper())
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40)
+    elif month == 'all' and day == 'all':
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        print("You loaded the file: " + str(filename))
+        print('The most common month is ' + list(MONTH_DATA.keys())[list(MONTH_DATA.values()).index((statistics.mode(df['Month_ID'])))].title())
+        print('The most common day of the week is ' + list(DAY_DATA.keys())[list(DAY_DATA.values()).index((statistics.mode(df['Day_of_Week_ID'])))].title())
+        print('The most common hour of the day is ' + list(HOUR_DATA.values())[list(HOUR_DATA.keys()).index((statistics.mode(df['Hour_of_Day_ID'])))].upper())
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40)
+    else:
+        print('\nCalculating The Most Frequent Times of Travel...\n')
+        start_time = time.time()
+        filename = CITY_DATA.get(city, "")
+        df = pd.read_csv(filename)
+        df['Month_ID'] = pd.DatetimeIndex(df['Start Time']).month
+        df['Day_of_Week_ID'] = pd.DatetimeIndex(df['Start Time']).dayofweek
+        df['Hour_of_Day_ID'] = pd.DatetimeIndex(df['Start Time']).hour
+        is_month =  df['Month_ID']==MONTH_DATA.get(month, "")
+        month_filter = df[is_month]
+        is_month_and_day =  month_filter['Day_of_Week_ID']==DAY_DATA.get(day, "")
+        df = month_filter[is_month_and_day]
+        print("You loaded the file: " + str(filename))
+        print('The most common month is ' + list(MONTH_DATA.keys())[list(MONTH_DATA.values()).index((statistics.mode(df['Month_ID'])))].title())
+        print('The most common day of the week is ' + list(DAY_DATA.keys())[list(DAY_DATA.values()).index((statistics.mode(df['Day_of_Week_ID'])))].title())
+        print('The most common hour of the day is ' + list(HOUR_DATA.values())[list(HOUR_DATA.keys()).index((statistics.mode(df['Hour_of_Day_ID'])))].upper())
+        print("\nThis took %s seconds." % (time.time() - start_time))
+        print('-'*40) 
